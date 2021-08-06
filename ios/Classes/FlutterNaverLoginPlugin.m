@@ -46,7 +46,7 @@
     if ([@"logIn" isEqualToString:call.method]) {
         [_thirdPartyLoginConn requestThirdPartyLogin];
     } else if ([@"logOut" isEqualToString:call.method]) {
-        [_thirdPartyLoginConn requestDeleteToken];
+        [_thirdPartyLoginConn resetToken];
     } else if ([@"getCurrentAcount" isEqualToString:call.method]) {
         [self getUserInfo];
     } else if ([@"getCurrentAccessToken" isEqualToString:call.method]) {
