@@ -213,7 +213,7 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   private inner class DeleteTokenTask : AsyncTask<Void, Void, Boolean>() {
     override fun doInBackground(vararg arg: Void): Boolean? {
-      val isSuccessDeleteToken = mOAuthLoginInstance?.logoutAndDeleteToken(mContext)
+      val isSuccessDeleteToken = mOAuthLoginInstance?.logout(mContext)
 
       return isSuccessDeleteToken
     }
