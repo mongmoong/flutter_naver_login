@@ -25,6 +25,7 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.ExecutionException
+import android.util.Log
 
 /** FlutterNaverLoginPlugin */
 class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -188,32 +189,33 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   fun logout(result: Result) {
-    var isSuccessDeleteToken = DeleteTokenTask().execute().get();
-
-    if (isSuccessDeleteToken) {
-      result.success(object : HashMap<String, Any>() {
-        init {
-          put("status", "cancelledByUser")
-          put("isLogin", false)
-        }
-      })
-    } else {
-      // 서버에서 token 삭제에 실패했어도 클라이언트에 있는 token 은 삭제되어 로그아웃된 상태이다
-      // 실패했어도 클라이언트 상에 token 정보가 없기 때문에 추가적으로 해줄 수 있는 것은 없음
-      val errorCode = mOAuthLoginInstance?.getLastErrorCode(mContext)?.code
-      val errorDesc = mOAuthLoginInstance?.getLastErrorDesc(mContext)
-      result.success(object : HashMap<String, String>() {
-        init {
-          put("status", "error")
-          put("errorMessage", "errorCode:$errorCode, errorDesc:$errorDesc")
-        }
-      })
-    }
+    mOAuthLoginInstance?.logout(mContext);
+//    var isSuccessDeleteToken = DeleteTokenTask().execute().get();
+//
+//    if (isSuccessDeleteToken) {
+//      result.success(object : HashMap<String, Any>() {
+//        init {
+//          put("status", "cancelledByUser")
+//          put("isLogin", false)
+//        }
+//      })
+//    } else {
+//      // 서버에서 token 삭제에 실패했어도 클라이언트에 있는 token 은 삭제되어 로그아웃된 상태이다
+//      // 실패했어도 클라이언트 상에 token 정보가 없기 때문에 추가적으로 해줄 수 있는 것은 없음
+//      val errorCode = mOAuthLoginInstance?.getLastErrorCode(mContext)?.code
+//      val errorDesc = mOAuthLoginInstance?.getLastErrorDesc(mContext)
+//      result.success(object : HashMap<String, String>() {
+//        init {
+//          put("status", "error")
+//          put("errorMessage", "errorCode:$errorCode, errorDesc:$errorDesc")
+//        }
+//      })
+//    }
   }
 
   private inner class DeleteTokenTask : AsyncTask<Void, Void, Boolean>() {
     override fun doInBackground(vararg arg: Void): Boolean? {
-      val isSuccessDeleteToken = mOAuthLoginInstance?.logout(mContext)
+      val isSuccessDeleteToken = mOAuthLoginInstance?.logoutAndDeleteToken(mContext)
 
       return isSuccessDeleteToken
     }
